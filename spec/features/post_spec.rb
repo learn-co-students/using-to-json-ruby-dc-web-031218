@@ -2,10 +2,15 @@ require 'rails_helper'
 
 describe 'navigate' do
   before do
-    @post = Post.create(title: "My Post", description: "My post desc")
+    Author.create(name:"Stephanie Klein")
+    puts "!!!!!#{Author.all}"
+    @post = Post.find_or_create_by(title: "My Post", description: "My post desc", author_id:1)
+
   end
 
   it 'shows the title on the show page in a h1 tag' do
+    puts "!!!!!#{@post.inspect}"
+    puts "!!!!!#{Author.all.inspect}"
     visit post_path(@post)
     expect(page).to have_css("h1", text: "My Post")
   end
@@ -34,8 +39,7 @@ describe 'form' do
   end
 
   it 'shows a new form that submits content and redirects and prints out params' do
-    @post = Post.create(title: "My Post", description: "My post desc")
-
+    @post = Post.find_or_create_by(title: "My Post", description: "My post desc",author_id: 1)
     visit edit_post_path(@post)
 
     fill_in 'post[title]', with: "My edit"

@@ -6,15 +6,23 @@ class PostsController < ApplicationController
   end
 
   def show
+    @post = Post.find(params[:id])
+    respond_to do |format|
+      format.html { render :show }
+      format.json { render json: @post.to_json(only: [:title, :description, :id],
+                              include: [author: { only: [:name]}]) }
+    end
   end
 
   def new
-    @post = Post.new
+    @post = Post.new(author_id:1)
   end
 
   def create
     @post = Post.create(post_params)
+
     @post.save
+    puts "%%%%%%%%%#{@post.inspect}"
     redirect_to post_path(@post)
   end
 
@@ -39,6 +47,7 @@ private
 
   # Never trust parameters from the scary internet, only allow the white list through.
   def post_params
-    params.require(:post).permit(:title, :description)
+    puts params
+    params.require(:post).permit(:title, :description, :author_id)
   end
 end
